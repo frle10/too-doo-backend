@@ -8,7 +8,7 @@ export class TodoListRepository extends Repository<TodoList> {
     const todoList = await this.findOne({ uuid });
 
     if (todoList) {
-      todoList.todos.sort((todo1, todo2) => todo1.id - todo2.id);
+      todoList.todos.sort((todo1, todo2) => todo2.id - todo1.id);
     }
 
     return todoList;
