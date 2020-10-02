@@ -6,6 +6,11 @@ import { UpdateNameDto } from './dto/update-name.dto';
 export class TodoListRepository extends Repository<TodoList> {
   async getTodoList(uuid: string): Promise<TodoList> {
     const todoList = await this.findOne({ uuid });
+
+    if (todoList) {
+      todoList.todos.sort((todo1, todo2) => todo1.id - todo2.id);
+    }
+
     return todoList;
   }
 
@@ -19,11 +24,9 @@ export class TodoListRepository extends Repository<TodoList> {
   }
 
   async updateName(uuid: string, updateNameDto: UpdateNameDto) {
-    const todoList = await this.findOne({ uuid }).then(tl => {
-      if (!tl) {
-        return this.createTodoList(uuid);
-      }
-    });
+    const todoList = await this.findOne({ uuid }).then(tl =>
+      tl ? tl : this.createTodoList(uuid),
+    );
 
     todoList.name = updateNameDto.name;
     await todoList.save();

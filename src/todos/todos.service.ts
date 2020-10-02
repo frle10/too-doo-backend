@@ -24,11 +24,7 @@ export class TodosService {
   async addTodo(uuid: string, addTodoDto: AddTodoDto): Promise<Todo> {
     const todoList = await this.todoListRepository
       .findOne({ uuid })
-      .then(tl => {
-        if (!tl) {
-          return this.todoListRepository.createTodoList(uuid);
-        }
-      });
+      .then(tl => (tl ? tl : this.todoListRepository.createTodoList(uuid)));
 
     return this.todoRepository.addTodo(todoList, addTodoDto);
   }
