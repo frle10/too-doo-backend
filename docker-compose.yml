@@ -1,6 +1,6 @@
 version: '3'
 services:
-  dinamo-database:
+  too-doo-database:
     container_name: too-doo-database
     image: postgres:10-alpine
     restart: always

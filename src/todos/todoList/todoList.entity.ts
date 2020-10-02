@@ -21,6 +21,7 @@ export class TodoList extends BaseEntity {
   @OneToMany(
     () => Todo,
     todo => todo.todoList,
+    { eager: true },
   )
   todos: Todo[];
 }
