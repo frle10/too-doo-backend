@@ -1,8 +1,8 @@
-version: '3'
+version: '3.8'
 services:
   too-doo-database:
     container_name: too-doo-database
-    image: postgres:10-alpine
+    image: postgres:alpine
     restart: always
     ports:
       - '47385:5432'
