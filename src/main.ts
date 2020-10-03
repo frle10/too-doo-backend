@@ -9,7 +9,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:3001',
     ],
-    methods: 'GET, POST, PATCH',
+    methods: 'GET, POST, PATCH, OPTIONS',
   });
   await app.listen(3000);
 }
