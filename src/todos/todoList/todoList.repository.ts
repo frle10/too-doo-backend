@@ -14,17 +14,19 @@ export class TodoListRepository extends Repository<TodoList> {
     return todoList;
   }
 
-  async createTodoList(uuid: string): Promise<TodoList> {
+  createTodoList(uuid: string): TodoList {
     const todoList = new TodoList();
     todoList.uuid = uuid;
     todoList.name = 'untitled';
     todoList.todos = [];
 
-    await todoList.save();
     return todoList;
   }
 
-  async updateName(uuid: string, updateNameDto: UpdateNameDto) {
+  async updateName(
+    uuid: string,
+    updateNameDto: UpdateNameDto,
+  ): Promise<TodoList> {
     const todoList = await this.findOne({ uuid }).then(tl =>
       tl ? tl : this.createTodoList(uuid),
     );
