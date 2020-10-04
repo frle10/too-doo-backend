@@ -31,6 +31,8 @@ export class TodoListRepository extends Repository<TodoList> {
 
     todoList.name = updateNameDto.name;
     await todoList.save();
+
+    todoList.todos.sort((todo1, todo2) => todo2.id - todo1.id);
     return todoList;
   }
 }
