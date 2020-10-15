@@ -14,12 +14,13 @@ export class TodoListRepository extends Repository<TodoList> {
     return todoList;
   }
 
-  createTodoList(uuid: string): TodoList {
+  async createTodoList(uuid: string): Promise<TodoList> {
     const todoList = new TodoList();
     todoList.uuid = uuid;
     todoList.name = 'untitled';
     todoList.todos = [];
 
+    await todoList.save();
     return todoList;
   }
 
