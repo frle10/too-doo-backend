@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { TodoList } from '../todoList/todoList.entity';
+import { TodoList } from '../todo-list/todoList.entity';
 
 @Entity()
 export class Todo extends BaseEntity {
@@ -18,9 +18,6 @@ export class Todo extends BaseEntity {
   @Column()
   content: string;
 
-  @ManyToOne(
-    () => TodoList,
-    todoList => todoList.todos,
-  )
+  @ManyToOne(() => TodoList, (todoList) => todoList.todos)
   todoList: TodoList;
 }

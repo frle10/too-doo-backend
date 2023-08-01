@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Todo } from './todo.entity';
 import { AddTodoDto } from './dto/add-todo.dto';
-import { TodoList } from '../todoList/todoList.entity';
+import { TodoList } from '../todo-list/todoList.entity';
 import { NotFoundException } from '@nestjs/common';
 
 @EntityRepository(Todo)
@@ -19,7 +19,7 @@ export class TodoRepository extends Repository<Todo> {
   }
 
   async updateCompleted(id: number): Promise<Todo> {
-    const todo = await this.findOne(id);
+    const todo = await this.findOne({ where: { id } });
 
     if (!todo) {
       throw new NotFoundException(`Todo with ID ${id} does not exist.`);

@@ -9,10 +9,10 @@ import {
   Post,
 } from '@nestjs/common';
 import { AddTodoDto } from './todo/dto/add-todo.dto';
-import { TodoList } from './todoList/todoList.entity';
+import { TodoList } from './todo-list/todoList.entity';
 import { TodosService } from './todos.service';
 import { Todo } from './todo/todo.entity';
-import { UpdateNameDto } from './todoList/dto/update-name.dto';
+import { UpdateNameDto } from './todo-list/dto/update-name.dto';
 
 @Controller('todos')
 export class TodosController {
