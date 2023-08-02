@@ -5,7 +5,11 @@ import { UpdateNameDto } from './dto/update-name.dto';
 @EntityRepository(TodoList)
 export class TodoListRepository extends Repository<TodoList> {
   async getTodoList(uuid: string): Promise<TodoList> {
-    const todoList = await this.findOne({ uuid });
+    const todoList = await this.findOne({
+      where: {
+        uuid,
+      },
+    });
 
     if (todoList) {
       todoList.todos.sort((todo1, todo2) => todo2.id - todo1.id);
@@ -28,7 +32,7 @@ export class TodoListRepository extends Repository<TodoList> {
     uuid: string,
     updateNameDto: UpdateNameDto,
   ): Promise<TodoList> {
-    const todoList = await this.findOne({ uuid }).then(tl =>
+    const todoList = await this.findOne({ where: { uuid } }).then((tl) =>
       tl ? tl : this.createTodoList(uuid),
     );
 

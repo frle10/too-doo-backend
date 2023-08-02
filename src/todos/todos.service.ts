@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TodoListRepository } from './todoList/todoList.repository';
+import { TodoListRepository } from './todo-list/todoList.repository';
 import { AddTodoDto } from './todo/dto/add-todo.dto';
 import { Todo } from './todo/todo.entity';
 import { TodoRepository } from './todo/todo.repository';
-import { UpdateNameDto } from './todoList/dto/update-name.dto';
-import { TodoList } from './todoList/todoList.entity';
+import { UpdateNameDto } from './todo-list/dto/update-name.dto';
+import { TodoList } from './todo-list/todoList.entity';
 
 @Injectable()
 export class TodosService {
@@ -23,8 +23,8 @@ export class TodosService {
 
   async addTodo(uuid: string, addTodoDto: AddTodoDto): Promise<Todo> {
     const todoList = await this.todoListRepository
-      .findOne({ uuid })
-      .then(tl => (tl ? tl : this.todoListRepository.createTodoList(uuid)));
+      .findOne({ where: { uuid } })
+      .then((tl) => (tl ? tl : this.todoListRepository.createTodoList(uuid)));
 
     return this.todoRepository.addTodo(todoList, addTodoDto);
   }

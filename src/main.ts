@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.enableCors({
     origin: [
       'https://toodoo.frle.net',
@@ -11,6 +12,8 @@ async function bootstrap() {
     ],
     methods: 'GET, POST, PATCH',
   });
+
   await app.listen(3000);
 }
+
 bootstrap();
