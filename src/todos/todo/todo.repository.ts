@@ -30,4 +30,12 @@ export class TodoRepository extends Repository<Todo> {
     await todo.save();
     return todo;
   }
+
+  async deleteTodoById(id: number): Promise<void> {
+    const result = await this.delete({ id });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Todo with ID ${id} does not exist.`);
+    }
+  }
 }
