@@ -29,6 +29,10 @@ export class TodosService {
     return this.todoRepository.addTodo(todoList, addTodoDto);
   }
 
+  async deleteTodoById(id: number): Promise<void> {
+    return this.todoRepository.deleteTodoById(id);
+  }
+
   updateName(uuid: string, updateNameDto: UpdateNameDto): Promise<TodoList> {
     return this.todoListRepository.updateName(uuid, updateNameDto);
   }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -29,6 +30,11 @@ export class TodosController {
     @Body() addTodoDto: AddTodoDto,
   ): Promise<Todo> {
     return this.todosService.addTodo(uuid, addTodoDto);
+  }
+
+  @Delete('/todo/:id')
+  deleteTodo(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.todosService.deleteTodoById(id);
   }
 
   @Patch('/:uuid')
