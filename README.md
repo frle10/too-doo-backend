@@ -1,75 +1,125 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Too Doo — Backend
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+The REST API behind [Too Doo](https://toodoo.frle.dev), a simple, shareable to-do list.
+Every list lives at its own uuid, so sharing a list is just sharing a link. There are no
+accounts and no auth: anyone with the uuid can read and edit the list.
 
-## Description
+## About this project
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Too Doo started in 2020 as an interview take-home while I was still a student. This is the
+NestJS + PostgreSQL API that the [frontend](https://github.com/frle10/too-doo-frontend)
+talks to.
 
-## Installation
+It was modernized in 2026 alongside the frontend — NestJS 10 to 11, TypeORM 0.3 to 1.0,
+Yarn to pnpm, a flat ESLint config, CI, and a real test suite. **The API contract and the
+behavior were deliberately left untouched.** The one change with a visible effect is that
+request bodies are now validated (an empty to-do is a `400` instead of a silent write),
+which is the DTO validation that was already declared but never wired up.
 
-```bash
-$ npm install
-```
+## Stack
 
-## Running the app
+|          |                                             |
+| -------- | ------------------------------------------- |
+| Runtime  | Node 22.12+ (CI on 24)                      |
+| Language | TypeScript 5.9                              |
+| Framework| NestJS 11 (Express 5 platform)              |
+| ORM      | TypeORM 1.0                                  |
+| Database | PostgreSQL (via Docker)                      |
+| Tests    | Jest — unit (mocked repos) + e2e (real DB)  |
+
+## Getting started
+
+Requires **Node 22.12+** (see `.nvmrc`) and pnpm. The exact pnpm version is pinned in
+`package.json` under `packageManager`, so `corepack enable pnpm` is enough to get it.
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+docker compose up -d     # PostgreSQL on port 47385
+pnpm install
+pnpm start:dev           # API on http://localhost:3000
 ```
 
-## Test
+`synchronize: true` is on, so TypeORM creates the schema from the entities on boot — no
+migration step for local development.
 
-```bash
-# unit tests
-$ npm run test
+### Scripts
 
-# e2e tests
-$ npm run test:e2e
+| Command             | What it does                                       |
+| ------------------- | -------------------------------------------------- |
+| `pnpm start:dev`    | Dev server with watch mode on port 3000            |
+| `pnpm start`        | Run once, no watch                                 |
+| `pnpm start:prod`   | Run the compiled build (`node dist/main`)          |
+| `pnpm build`        | Compile to `dist/`                                 |
+| `pnpm test`         | Unit tests (mocked repositories, no database)      |
+| `pnpm test:watch`   | Unit tests in watch mode                           |
+| `pnpm test:cov`     | Unit tests with a coverage report                  |
+| `pnpm test:e2e`     | End-to-end tests — **needs `docker compose up`**   |
+| `pnpm typecheck`    | `tsc --noEmit`                                      |
+| `pnpm lint`         | ESLint (flat config, type-aware)                   |
+| `pnpm format`       | Prettier                                           |
 
-# test coverage
-$ npm run test:cov
+CI (`.github/workflows/ci.yml`) runs `lint`, `typecheck`, `test`, and `build` on every
+push and PR. The e2e suite is not part of CI because it needs a database; run it locally.
+
+## Configuration
+
+The database connection is read from the environment, with defaults matching the Docker
+Postgres above — so no `.env` is needed for local development. Copy `.env.example` to `.env`
+to point at a different database.
+
+| Variable      | Default            |
+| ------------- | ------------------ |
+| `DB_HOST`     | `localhost`        |
+| `DB_PORT`     | `47385`            |
+| `DB_USERNAME` | `postgres`         |
+| `DB_PASSWORD` | `postgres`         |
+| `DB_NAME`     | `too-doo-database` |
+
+## API
+
+Base path is `/todos`. A list is identified by a client-minted uuid; a to-do by its
+numeric id.
+
+| Method   | Path                | Purpose                                                |
+| -------- | ------------------- | ------------------------------------------------------ |
+| `GET`    | `/todos/:uuid`      | Fetch a list. **Empty body** means "no such list".     |
+| `PATCH`  | `/todos/:uuid`      | Rename a list, creating it if it does not exist.       |
+| `POST`   | `/todos/todo/:uuid` | Add a to-do, creating the list if it does not exist.   |
+| `PATCH`  | `/todos/todo/:id`   | Toggle a to-do's `completed` flag.                     |
+| `DELETE` | `/todos/todo/:id`   | Delete a to-do.                                        |
+
+A list is persisted lazily — it does not exist until the first `PATCH` (name) or `POST`
+(to-do), at which point it is created as `untitled`. To-dos come back newest-first.
+
+CORS is restricted to the frontend origins in `src/main.ts`
+(`toodoo.frle.dev`, plus `localhost:5173` for Vite dev and `localhost:3000`). A browser
+calling from any other origin is blocked.
+
+## Project structure
+
+```
+src/
+  main.ts                    Entry point: ValidationPipe + CORS, listens on 3000
+  app.module.ts              Wires ConfigModule + TypeOrmModule (async) + TodosModule
+  config/typeorm.config.ts   Builds the DB connection options from env
+  todos/
+    todos.controller.ts      Routes → service
+    todos.service.ts         All the logic; injects the two repositories
+    todos.module.ts          Registers the entities and the controller/service
+    todos.service.spec.ts    Unit tests (mocked repositories)
+    todo-list/
+      todoList.entity.ts      TodoList (id, uuid, name, todos)
+      dto/update-name.dto.ts  { name }
+    todo/
+      todo.entity.ts          Todo (id, completed, content, todoList)
+      dto/add-todo.dto.ts     { content }
+test/
+  todos.e2e-spec.ts          Full lifecycle against a real Postgres
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+The controller is thin; all behavior lives in `TodosService`, which injects the standard
+TypeORM `Repository<TodoList>` and `Repository<Todo>`. There are no custom repository
+classes.
 
 ## License
 
-  Nest is [MIT licensed](LICENSE).
+MIT — see [LICENSE](LICENSE).

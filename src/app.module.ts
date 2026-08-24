@@ -1,9 +1,17 @@
 import { Module } from '@nestjs/common';
-import { TodosModule } from './todos/todos.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeOrmConfig } from './config/typeorm.config';
+import { TodosModule } from './todos/todos.module';
+import { buildTypeOrmConfig } from './config/typeorm.config';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig), TodosModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: buildTypeOrmConfig,
+    }),
+    TodosModule,
+  ],
 })
 export class AppModule {}
