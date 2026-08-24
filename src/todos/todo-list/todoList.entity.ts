@@ -1,14 +1,8 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Todo } from '../todo/todo.entity';
 
 @Entity()
-export class TodoList extends BaseEntity {
+export class TodoList {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -18,10 +12,6 @@ export class TodoList extends BaseEntity {
   @Column()
   name: string;
 
-  @OneToMany(
-    () => Todo,
-    todo => todo.todoList,
-    { eager: true },
-  )
+  @OneToMany(() => Todo, (todo) => todo.todoList, { eager: true })
   todos: Todo[];
 }

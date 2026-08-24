@@ -20,7 +20,9 @@ export class TodosController {
   constructor(private todosService: TodosService) {}
 
   @Get('/:uuid')
-  getTodoList(@Param('uuid', ParseUUIDPipe) uuid: string): Promise<TodoList> {
+  getTodoList(
+    @Param('uuid', ParseUUIDPipe) uuid: string,
+  ): Promise<TodoList | null> {
     return this.todosService.getTodoList(uuid);
   }
 

@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   too-doo-database:
     container_name: too-doo-database

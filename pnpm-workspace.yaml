@@ -1,0 +1,7 @@
+allowBuilds:
+  unrs-resolver: true
+# unrs-resolver (pulled in transitively by the ESLint toolchain) ships a native
+# binding built by a postinstall script; allow it so pnpm does not fail on an
+# unacknowledged ignored build.
+onlyBuiltDependencies:
+  - unrs-resolver
